@@ -2,70 +2,46 @@
 using namespace std;
 
 int main() {
-
-    const int CANT = 144; 
-    float temperatura[CANT];
-
-    float maxima, minima, suma = 0;
-    int posMinima = 0;
-
-    // Carga de temperaturas
-    for (int i = 0; i < CANT; i++) {
-
-        cout << "Ingrese temperatura #" << i + 1 << ": ";
-        cin >> temperatura[i];
-
-        // Primera temperatura
-        if (i == 0) {
-            maxima = temperatura[i];
-            minima = temperatura[i];
-        }
-
-        // Máxima
-        if (temperatura[i] > maxima) {
-            maxima = temperatura[i];
-        }
-
-        // Mínima
-        if (temperatura[i] < minima) {
-            minima = temperatura[i];
-            posMinima = i;
-        }
-
-        // Suma para promedio
-        suma += temperatura[i];
+    int nro[27];
+    int i;
+    int mayor = 1,cant = 0;
+    int goles;
+    for (i=1; i <=26 ; i++){
+        nro [i]=0;
     }
+    
+    cout << "Que camiseta tiene el jugador? : ";
+    cin >> i;
+    cout << "Cuantos goles metio ese jugador? : ";
+    cin >> goles;
+    while (goles > 0 && i > 0 && i-1<=26)
+    {
+        nro[i] = goles;
+        cout << "Que camiseta tiene el jugador? : ";
+        cin >> i;
+        cout << "Cuantos goles metio ese jugador? : ";
+        cin >> goles;
+    }
+    cout << "\n========================================\n";
+    cout << "      RESUMEN DE GOLES DEL EQUIPO\n";
+    cout << "========================================\n\n";
 
-    // Promedio
-    float promedio = suma / CANT;
+    for (i=1; i <=26 ; i++){
+        if (nro[i] > nro[mayor]){
+            mayor = i;
+        } 
+        if (nro[i] > 0){
+            cout << "El nro " <<i<< " metio: "<< nro[i] <<" goles"<< endl;
+            cant= cant + 1;
+        } 
+    }
+    cout << "\n========================================\n";
+    cout << "         RESULTADOS FINALES\n";
+    cout << "========================================\n\n";
 
-    // Conversión de posición a hora
-    int minutosTotales = posMinima * 10;
-
-    int hora = minutosTotales / 60;
-    int minutos = minutosTotales % 60;
-
-    // Resultados
-    cout << "\n--- RESULTADOS ---\n";
-
-    cout << "Temperatura maxima: " << maxima << endl;
-
-    cout << "Temperatura minima: " << minima << endl;
-
-    cout << "Ocurrio a las ";
-
-    // Para mostrar 02:50 en vez de 2:50
-    if (hora < 10)
-        cout << "0";
-
-    cout << hora << ":";
-
-    if (minutos < 10)
-        cout << "0";
-
-    cout << minutos << endl;
-
-    cout << "Temperatura promedio: " << promedio << endl;
-
+    cout << "El goleador del equipo fue en Nro: " << mayor << endl;
+    cout << "Hubo en total : " << cant << " jugadores que metieron gol"<< endl;
+    cout << "\n========================================\n";
+    cout << "========================================\n\n";
     return 0;
 }
