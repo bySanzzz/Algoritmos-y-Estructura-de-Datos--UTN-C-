@@ -1,0 +1,190 @@
+#include <iostream> //entrada y salida de datos
+using namespace std;
+#define MAX_ELEMENTO 100
+const int MAX_ELEMENTOS = 100;
+
+int main(){
+    //variable: espacio de memoria que me permite almacenar un valor de determinado tipo de dato.
+    // tipoDato nombreVariable = valor;
+    /*
+    primitivos
+
+    int 10
+    float 19.6
+    double
+    char '\0'
+    bool -> true o false
+    
+    varibles y funciones -> camelCase -> holaSantiagoComoEstas
+    struct -> PascalCase ->HolaSantiComoEstas
+    constante -> UPPER_SNAKE_CASE -> HOLA_SANTI_COMO_ESTAS
+    */
+    int edadSanti = 20;
+
+    /*
+    Operadores artiméticos
+    + - / * % ++ --
+
+    Operadores asignación
+    =
+        asignación compuesta
+        += -= *= /=
+        i += 10 -> i = i + 10
+    Operadores comparación
+    valUno = 20;
+    valDos = 10;
+
+    valUno == valDos -> false
+    valUno != valDos -> true
+    < > <= >=
+
+    Operadores lógicos
+
+    true && true -> true
+    true || false -> true
+    !false -> true
+
+
+    */
+    
+    int vecNumeros[MAX_ELEMENTOS];
+    int tamVecNumeros = 20;
+
+    for(int i = 0; i< tamVecNumeros; i++){
+        cout << vecNumeros[i] << endl;
+    }
+}
+
+//funciones
+
+/*
+tipoRetorno nombreFuncion(parametros);
+
+no void -> float, int, double, bool, char, struct
+
+Martillo buscarMartillo(Llave);
+
+Martillo buscarMartillo(Llave llaveBodega){
+
+    return martillo;
+}
+
+void -> son procedimientos, no devuelven nada.
+
+void guardarMartillo(Martillo martillo){
+
+}
+*/
+
+//prototipo, firma
+int sumaValores(int, int);
+int sumaValores(int valA, int valB){
+    return valA + valB;
+}
+
+int restaValores(int valA, int valB){
+    return valA - valB;
+}
+
+void calculadora(){
+    int a, b;
+    cout << "Ingrese valor: "; cin >> a;
+    cout << "Ingrese valor: "; cin >> b;
+
+    int resultado = sumaValores(a,b);
+    cout << "la suma es: " << resultado;
+    resultado = restaValores(a,b);
+    cout << "la resta es: " << resultado;
+}
+
+/*
+
+struct Nombre{
+    tipoDato nombreVariable;
+};
+*/
+
+struct Persona{
+    string nombre;
+    int edad;
+    int dni;
+};
+
+void funcion(){
+    Persona info;
+    info.nombre = "Santiago";
+    info.edad = 20;
+    info.dni = 89328493;
+
+    Persona vecPersonas[MAX_ELEMENTOS];
+    int tamVecPersonas = 0;
+
+    for(int i = 0; i < MAX_ELEMENTOS;i++){
+        cout << "Ingrese nombre: "; cin >> vecPersonas[tamVecPersonas].nombre;
+        cout << "Ingrese edad: "; cin >> vecPersonas[tamVecPersonas].edad;
+        cout << "Ingrese dni: "; cin >> vecPersonas[tamVecPersonas].dni;
+        //siempre que agrego un dato, debo aumentar el tamaño del vector.
+        tamVecPersonas++;
+    }
+    
+    for(int i = 0; i < tamVecPersonas; i++){
+        cout << "Nombre: " <<  vecPersonas[i].nombre << endl;
+        cout << "Edad: " <<  vecPersonas[i].edad << endl;
+        cout << "dni: " <<  vecPersonas[i].dni << endl;
+    }
+}
+
+/* Definir la estructura Libro con los campos: título, autor y cantidad de páginas. Desarrollar una función para cargar un vector de 10 libros y otra para mostrarlos por pantalla. 
+
+1)  Que hay que hacer? Tengo que mostrar los elementos de un vector por pantalla
+2)  Que herramientas tengo para resolver el problema? tengo un vector de 10 elementos, el vector tiene la estructura libro
+3)  Que herramientas no tengo pero necesito para resolver el problema? yo tengo que cargar el vector, tengo que crear la estructura.
+
+a) que tipo de dato es la función? la respuesta la sacamos con el punto 1. 
+b) defino los parámetros: la respuesta la sacamos del punto 2 y 3.
+*/
+
+struct Libro{
+    string titulo;
+    string autor;
+    int cantPaginas;
+};
+
+void cargarVector(){
+    Libro vecLibros[MAX_ELEMENTOS];
+    int tamVecLibros = 0;
+
+    for(int i = 0; i < 10; i++){
+        cout << "Ingrese titulo: "; cin >> vecLibros[tamVecLibros].titulo;
+        cout << "Ingrese autor: "; cin >> vecLibros[tamVecLibros].autor;
+        cout << "Ingrese cantPaginas: "; cin >> vecLibros[tamVecLibros].cantPaginas;
+        tamVecLibros++;
+    }
+}
+
+void mostrarVector(Libro vecLibro[], int tamVecLibros){
+    for(int i = 0; i < tamVecLibros; i++){
+        cout << "titulo: " << vecLibro[i].titulo;
+        cout << "autor: " << vecLibro[i].autor;
+        cout << "cantPaginas: " << vecLibro[i].cantPaginas;
+    }
+}
+
+/*Crear la estructura Persona con los campos: nombre y edad. Leer un vector de 15 personas y crear una función que cuente y retorne cuántas de ellas son mayores de 18 años. */
+
+struct Personas{
+    string nombre;
+    int edad;
+};
+
+int contarMayores(Personas vecPersonas[], int tamVecPersonas){
+    int contadorMayores = 0;
+    for (int i = 0; i < tamVecPersonas; i++){
+        if(vecPersonas[i].edad >= 18){
+            contadorMayores++;
+        }
+    }
+    return contadorMayores;
+}
+
+/*Definir la estructura Producto que contenga código, precio y stock. Cargar un arreglo de 20 productos e implementar una función que calcule el valor total del inventario general (precio x stock de todos los artículos).*/
