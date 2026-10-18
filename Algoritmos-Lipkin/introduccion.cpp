@@ -1,6 +1,6 @@
 #include <iostream> //entrada y salida de datos
 using namespace std;
-#define MAX_ELEMENTO 100git
+#define MAX_ELEMENTO 100
 const int MAX_ELEMENTOS = 100;
 
 int main(){
