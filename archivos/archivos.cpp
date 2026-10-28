@@ -141,4 +141,282 @@ void listarALumnos(char rutaArchAlumnos[]){
         cout << "Promedio: " << data.promedio;
     }
     fclose(archAlumnos);
+
 }
+--------------- Segunda Parte -------------------
+
+//6. Búsqueda Secuencial: Diseñar una función que reciba un número de legajo, 
+//busque ese alumno en el archivo y, si lo encuentra, muestre su nombre y 
+//promedio. Si no existe, informar con un mensaje.// 
+void numLegajo(char rutaArch[], int legajoBuscar){
+    FILE *archAlumnos= fopen(rutaArch,"rb");
+    if (archAlumnos == NULL){
+        cout << "No se pudo abrir el archivo" << endl;
+        return;
+    }
+    Alumno data;
+    bool encontrado = false;
+    while(fread(&data,sizeof(Alumno),1,archAlumnos)){
+        if (data.legajo == legajoBuscar){
+            cout << " Alumno encontrado "<< endl;
+            cout << data.nombre << endl;
+            cout << data.promedio << endl;
+            encontrado = true;
+            break;
+        }
+    }
+    if (encontrado == false){
+        cout << "No se encotro al Alumno buscado" << endl;
+    }
+    fclose(archAlumnos);
+    }
+
+/*
+=====================================================
+CONSIGNA 7 - Filtro
+Crear una función que genere un archivo de texto aprobados.txt
+(legible por humanos) que contenga solamente los nombres y
+promedios de los alumnos que tengan promedio superior a 6.
+=====================================================
+*/
+void crearArchivo( char rutaArch [], char rutaArchCrear[]){
+    FILE *archAlumnos = fopen(rutaArch,"rb");
+    FILE *ArchNuevo = fopen(rutaArchCrear,"wb");
+    if (archAlumnos == NULL || ArchNuevo == NULL){
+        cout << "No se pudo abrir el archivo"<< endl;
+        return;
+    }
+    Alumno auxRead;
+    ALumno auxWrite;
+    while(fread(&auxRead,sizeof(Alumno),1,archAlumnos)){
+        if (auxRead.promedio > 6){
+            fwrite(&auxWrite,sizeof(Alumno),1,ArchNuevo)//fprintf veremos
+        }
+    }
+    fclose(archAlumnos);
+    fclose(ArchNuevo);
+}
+
+
+/*
+=====================================================
+CONSIGNA 8 - Modificación de un campo
+Realizar una función que pida un legajo al usuario. Si el alumno
+existe, debe permitir modificar su promedio.
+(Estrategia: buscar el registro, posicionar el puntero del archivo
+en la posición correcta usando fseek, y sobrescribir el registro
+modificado).
+=====================================================
+*/
+void modPromedio(char rutaArch[], int legajo, int newPromedio){
+    FILE * archBaja = fopen(rutaArch,"rb+");
+    if (archBaja == NULL){
+        cout << "No se abrio el archivo"<< endl;
+        return;
+    }
+    bool encontrado = false;
+    Alumno aux;
+    
+    while (fread(&aux,sizeof(Alumno),1,archBaja)){
+        if (aux.legajo == legajo){ 
+            fseek(archBaja, -1 * sizeof(Alumno),SEEK_CUR); //me recomienda usar una variable -(long)sizeof(alumno)
+            aux.promedio = newPromedio;
+            fwrite(&aux, sizeof(Alumno), 1, archBaja);
+        encontrado = true;
+        break;
+        }
+    }
+    if (encontrado == false){
+        cout << "No se encontro el Alumno"<<;
+    }
+
+    fclose(archBaja);
+
+}
+
+
+
+/*
+=====================================================
+CONSIGNA 9 - Baja lógica
+Diseñar una función que reciba un legajo y realice una "baja lógica".
+Esto significa buscar el registro y cambiar el campo activo a false,
+sobrescribiendo el registro en el archivo. No se borra físicamente
+el dato, solo se marca.
+=====================================================
+*/
+void bajaAlumnos(char rutaArch[], int legajo){
+    FILE * archBaja = fopen(rutaArch,"rb+");
+    if (archBaja == NULL){
+        cout << "No se abrio el archivo"<< endl;
+        return;
+    }
+    bool newEstado = false;// Entiendo que la idea no es cambiar el estado, es solamente ponerlo a false
+    bool encontrado = false;
+    Alumno aux;
+    
+    while (fread(&aux,sizeof(Alumno),1,archBaja)){
+        if (aux.legajo == legajo){ 
+            fseek(archBaja, -1 * sizeof(Alumno),SEEK_CUR); 
+            aux.activo = newEstado;
+            fwrite(&aux, sizeof(Alumno), 1, archBaja);
+        encontrado = true;
+        break;
+        }
+    }
+    if (encontrado == false){
+        cout << "No se encontro el Alumno"<<;
+    }
+
+    fclose(archBaja);
+
+}
+
+
+
+/*
+=====================================================
+CONSIGNA 10 - Listado de activos
+Modificar la función del ejercicio 5 para que solo muestre por
+pantalla a los alumnos que tengan el campo activo en true.
+=====================================================
+*/
+// Tu resolución acá
+void listarALumnos(char rutaArchAlumnos[]){
+    FILE *archAlumnos = fopen(rutaArchAlumnos,"rb");
+    if(archAlumnos == NULL){
+        cout << "no se abrio" << endl;
+        return;
+    }
+    Alumno data;
+    while(fread(&data,sizeof(Alumno),1,archAlumnos)){
+        if (data.activo == true){
+        cout << "Nombre: " << data.nombre << endl;
+        cout << "legajo: "<< data.legajo << endl;
+        cout << "Promedio: " << data.promedio << endl;
+        }
+    }
+    fclose(archAlumnos);
+
+}
+
+
+/*
+=====================================================
+CONSIGNA 11 - De archivo a vector
+Dado un archivo alumnos.dat con, a lo sumo, 100 registros, cargar
+todos los alumnos activos en un vector en memoria.
+(Esto se hace para poder ordenar o trabajar más rápido).
+=====================================================
+*/
+// Tu resolución acá
+#define MAX_ELEMENTOS_ALUMNOS 100
+
+void vectorizandoArch(char rutaArch[], Alumno vecAlumno [], int &tamVecAlumno )
+    FILE *archAlumnos = fopen(rutaArch, "rb" );
+    if (archAlumnos == NULL){
+        cout << "No se pudo abrir el archivo"<< endl;
+    }
+    int tamVecAlumno = 0;
+    Alumno aux;
+    while(fread(&aux,sizeof(Alumno),1,archAlumnos)){
+        if (aux.activo == true){
+            vecAlumno[tamVecAlumno] = aux;
+            tamVecAlumno ++;
+        }
+    }
+    fclose(archAlumnos);
+
+
+/*
+=====================================================
+CONSIGNA 12 - Ordenamiento y back-up
+Tomando el vector cargado en el ejercicio anterior, ordenarlo
+alfabéticamente por nombre. Luego, guardar este listado ordenado
+en un nuevo archivo llamado alumnos_ordenados.dat.
+=====================================================
+*/
+void ordenamiento(Alumno vecAlumno[], int tamVecAlumno){
+    Alumno aux;
+    for(int i = 0; i < tamVecAlumno - 1; i++){
+        for(int j = 0; j < tamVecAlumno - 1 - i; j++){
+            if(vecAlumno[j].nombre > vecAlumno[j+1].nombre){ //El enunciado no espera que haya 2 personas con el mismo nombre asi que ignoro la posibilidad
+                aux = vecAlumno[j];
+                vecAlumno[j] = vecAlumno[j+1];
+                vecAlumno[j+1] = aux;
+            }
+        }
+    }
+}
+void creatNewArch(char rutaArch[],Alumno vecAlumno[], int tamVecAlumno){
+    FILE * newArch = fopen(rutaArch, "wb+");
+    if (newArch == NULL){
+        cout << "No se abrio el archivo"<<endl;
+        return;
+    }
+    Alumno auxCreate;
+    for(int i = 0; i < tamVecAlumno; i++){
+        auxCreate = vecAlumno[i]; 
+        fwrite(&auxCreate,sizeof(Alumno),1,newArch);
+    }
+    fclose(newArch);
+}
+
+
+
+
+/*
+=====================================================
+CONSIGNA 13 - Baja física (compactación)
+Dado el archivo alumnos.dat que contiene registros activos (true)
+e inactivos (false), generar un archivo temporal que contenga solo
+los activos. Luego, eliminar el archivo original y renombrar el
+temporal como alumnos.dat.
+=====================================================
+*/
+// Tu resolución acá
+
+
+
+/*
+=====================================================
+CONSIGNA 14 - Corte de control (simulado)
+Se tiene un archivo ventas.dat con registros (codigo_producto,
+cantidad_vendida). El archivo está ordenado por código de producto.
+Se pide leer el archivo y mostrar el total de unidades vendidas por
+cada producto.
+(Ejemplo: si hay 3 registros del producto 'A' con cantidades 10, 5
+y 5, mostrar "Producto A: 20 ventas total").
+=====================================================
+*/
+// Tu resolución acá
+
+
+
+/*
+=====================================================
+CONSIGNA 15 - Apareo de archivos (merge)
+Se tienen dos archivos cursoA.dat y cursoB.dat, ambos ordenados por
+legajo de menor a mayor. Generar un tercer archivo todos.dat que
+contenga a los alumnos de ambos cursos, manteniendo el orden por
+legajo.
+(Nota: se debe leer de a un registro de cada archivo y comparar
+para decidir cuál escribir primero).
+=====================================================
+*/
+// Tu resolución acá
+
+
+
+/*
+=====================================================
+CONSIGNA 16 - Actualización de stock (maestro-novedades)
+- Maestro: productos.dat (id, descripcion, stock_actual).
+- Novedades: ventas_del_dia.dat (id, cantidad_vendida).
+Recorrer el archivo de ventas y, por cada venta, buscar el producto
+correspondiente en el archivo maestro y restar la cantidad vendida
+al stock actual. Actualizar el archivo maestro.
+=====================================================
+*/
+// Tu resolución acá
+
