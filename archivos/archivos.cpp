@@ -374,8 +374,24 @@ los activos. Luego, eliminar el archivo original y renombrar el
 temporal como alumnos.dat.
 =====================================================
 */
-// Tu resolución acá
-
+void createAndDelete(char rutaArchOriginal [], char rutaArchTemporal []){
+    FILE * ArchOriginal = fopen(rutaArchOriginal, "rb");
+    FILE * ArchTemporal = fopen(rutaArchTemporal, "wb+");
+    if (ArchOriginal == NULL || ArchTemporal == NULL){
+        cout << "No se encontro archivo buscado"<<endl;
+        return;
+    }
+    Alumno aux;
+    while(fread(&aux,sizeof(Alumno),1,ArchOriginal)){
+        if (aux.activo == true){
+            fwrite(&aux,sizeof(Alumno),1,ArchTemporal);
+        }
+    }
+    fclose(ArchOriginal);
+    fclose(ArchTemporal);
+    remove(rutaArchOriginal); // Metodo de eliminar archivo
+    rename(rutaArchTemporal, rutaArchOriginal); // Renombrar Archivo
+}
 
 
 /*
@@ -389,7 +405,33 @@ cada producto.
 y 5, mostrar "Producto A: 20 ventas total").
 =====================================================
 */
-// Tu resolución acá
+struct Ventas {
+    char  codigo_producto[10];
+    int cantidad_vendida;
+}
+void ventasRegistros(char rutaArchVentas[]){
+    FILE * ArchVentas = fopen(rutaArchVentas, "rb");
+    if (ArchVentas == NULL){
+        cout << "No se pudo abrir el Archivo" << endl;
+        return;
+    }
+    Ventas aux;
+    if (fread(&aux, sizeof(Ventas), 1, ArchVentas) == 1){ // Inicializo la variable con el primer codigo moviendo el puntero 1 vez por el primer registro
+        char cod_productoActual = aux.codigo_producto;
+        int total = aux.cantidad_vendida;
+
+        while (fread(&aux, sizeof(Ventas), 1, ArchVentas)){// Sigo moviendo el archivo al completo para poder todos los registros
+            if (aux.codigo_producto == cod_productoActual){
+                total += aux.cantidad_vendida;               // contabilizar en caso que sea el mismo producto
+            } else {
+                cout << "Producto " << cod_productoActual << ": " << total << " ventas total" << endl;
+                cod_productoActual = aux.codigo_producto;    // empieza el producto nuevo
+                total = aux.cantidad_vendida;                // con la cantidad de este registro
+            }
+        }
+        cout << "Producto " << cod_productoActual << ": " << total << " ventas total" << endl;
+        }
+    }
 
 
 
@@ -404,9 +446,45 @@ legajo.
 para decidir cuál escribir primero).
 =====================================================
 */
-// Tu resolución acá
+void archivoOrdenado(char rutaArchCursoA [],char rutaArchCursoB [],char rutaArchTotal []){
+    FILE * ArchCursoA = fopen (rutaArchCursoA,rb);
+    FILE * ArchCursoB = fopen (rutaArchCursoB,rb);
+    FILE * ArchCursoTotal = fopen (rutaArchTotal,ab);
+    if (ArchCursoA == NULL || ArchCursoB == NULL || archAlumnos == NULL){
+        cout << "No se pudo abrir el archivo" << endl;
+    }
+    Alumno aux; 
+    while(fread())
+}
 
+Alumno a, b;
+    bool hayA = fread(&a, sizeof(Alumno), 1, archA) == 1;   // primer registro de A
+    bool hayB = fread(&b, sizeof(Alumno), 1, archB) == 1;   // primer registro de B
 
+    while (hayA && hayB){
+        if (a.legajo <= b.legajo){
+            fwrite(&a, sizeof(Alumno), 1, archTodos);
+            hayA = fread(&a, sizeof(Alumno), 1, archA) == 1;
+        } else {
+            fwrite(&b, sizeof(Alumno), 1, archTodos);
+            hayB = fread(&b, sizeof(Alumno), 1, archB) == 1;
+        }
+    }
+
+    while (hayA){   // sobró algo de A
+        fwrite(&a, sizeof(Alumno), 1, archTodos);
+        hayA = fread(&a, sizeof(Alumno), 1, archA) == 1;
+    }
+
+    while (hayB){   // sobró algo de B
+        fwrite(&b, sizeof(Alumno), 1, archTodos);
+        hayB = fread(&b, sizeof(Alumno), 1, archB) == 1;
+    }
+
+    fclose(archA);
+    fclose(archB);
+    fclose(archTodos);
+}
 
 /*
 =====================================================
