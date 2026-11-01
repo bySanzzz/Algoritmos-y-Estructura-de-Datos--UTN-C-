@@ -2,6 +2,28 @@
 #include <stack>
 using namespace std;
 
+struct Nodo{
+    int info;        // el dato
+    Nodo *sgte;      // la dirección del nodo que tiene debajo 
+}; //[ info | sgte ]//
+
+Nodo *pila = NULL; // Creo pila 
+
+void push(Nodo *&pila, int dato){
+    Nodo *nuevo = new Nodo();   // 1) crear un nodo
+    nuevo->info = dato;         // 2) guardarle el dato
+    nuevo->sgte = pila;         // 3) que apunte al que era el tope
+    pila = nuevo;               // 4) ahora el tope es el nuevo
+}
+
+int pop(Nodo *&pila){
+    Nodo *aux = pila;       // 1) me guardo el nodo del tope
+    int ret = aux->info;    // 2) me guardo su dato
+    pila = aux->sgte;       // 3) el tope pasa a ser el de abajo
+    delete aux;             // 4) libero el nodo viejo
+    return ret;             // 5) devuelvo el dato
+}
+
 /*
 =====================================================
 NIVEL 1
@@ -15,7 +37,17 @@ mostrar los elementos por pantalla desapilándolos.
 */
 // Tu resolución acá
 
+void agregarMostrarElementos(int vecNumeros[], int tamVecNumeros,Nodo *&pila){
+    for(int i = 0; i< tamVecNumeros; i++){
+        push(pila,vecNumeros[i]);// pila y su dato
+    }
 
+    while(pila != NULL){
+        int info = pop(pila); //Solo la pila
+        cout << info << endl;
+    }
+    
+}
 
 /*
 CONSIGNA 2
@@ -34,7 +66,19 @@ elementos que contiene (la pila original debe quedar en su estado
 inicial).
 */
 // Tu resolución acá
+int contar(Nodo *&pila){
+    Nodo *pilaAux = NULL;
+    int contElem = 0;
 
+    while(pila != NULL){
+        push(pilaAux,pop(pila)); 
+        contElem++;
+    }
+
+    while(pilaAux != NULL){
+        push(pila,pop(pilaAux));
+    }
+}
 
 
 /*
@@ -44,6 +88,23 @@ la suma de todos sus elementos sin alterar el contenido original de
 la pila.
 */
 // Tu resolución acá
+int contar(Nodo *&pila){
+    Nodo *pilaAux = NULL;
+    int sumTotal = 0 ;
+
+    while(pila != NULL){
+        int valor = pop(pila);
+        sumTotal = valor + sumTotal;
+        push(pilaAux,valor); 
+        
+    }
+
+    while(pilaAux != NULL){
+        push(pila,pop(pilaAux));
+    } 
+    return sumTotal;
+}
+
 
 
 
@@ -53,6 +114,20 @@ Escribir una función que reciba una pila y reemplace todas las
 ocurrencias de un número N (dado por el usuario) por un nuevo valor M.
 */
 // Tu resolución acá
+void reemplazar(Nodo *&pila, int n , int m){
+    Nodo *pilaAux = NULL;
+    while(pila != NULL){
+        int valor = pop(pila);
+        if (n == valor){
+            valor = m;
+        }
+        push(pilaAux,valor); 
+    }
+    while (pilaAux != NULL){
+        push(pila,pop(pilaAux));
+    }
+}
+
 
 
 
@@ -61,8 +136,22 @@ CONSIGNA 6
 Construir una función que reciba una pila y devuelva el promedio de
 sus valores.
 */
-// Tu resolución acá
+float prom(Nodo *&pila){
+    float sumTotal = 0 ;
+    float cont = 0;
+    float promE = 0;
 
+    while(pila != NULL){
+        float valor = pop(pila);
+        sumTotal = valor + sumTotal;
+        cont++;
+    }
+    if (sumTotal != 0 ){
+        float promE = sumTotal / cont;
+    }
+   
+    return promE;
+}
 
 
 /*
@@ -71,9 +160,24 @@ Dada una pila con números enteros, realizar una función que determine
 cuál es el valor mínimo almacenado en ella. Restaurar la pila original
 antes de terminar.
 */
-// Tu resolución acá
+void minimo(Nodo *&pila){
+    Nodo *auxPila = NULL;
 
+    int minAbs = pop(pila);
+    push(auxPila,minAbs);
 
+    while (pila != NULL){
+       int aux =  pop(pila);
+       if (minAbs > aux){
+            minAbs = aux;
+       }
+       push(auxPila,aux);
+    }
+    while (auxPila != NULL){
+        push(pila,pop(auxPila));
+    }
+    
+}
 
 /*
 CONSIGNA 8
@@ -82,7 +186,15 @@ a otra pila (destino) de modo que el orden de los elementos en la pila
 destino sea el mismo que en la origen.
 */
 // Tu resolución acá
-
+void origenyDestino(Nodo *&pilaOrigen, Nodo *&pilaDestino){
+    Nodo *pilAux = NULL;
+    while (pilaOrigen != NULL){
+        push(pilAux,pop(pilaOrigen));
+    }
+    while (pilAux != NULL){
+        push(pilaDestino,pop(pilAux));
+    }
+}
 
 
 /*
@@ -98,8 +210,18 @@ que contenga solo los números pares y otra con los impares. La pila
 original debe quedar vacía.
 */
 // Tu resolución acá
-
-
+void paresEimpares(Nodo *&pila){
+    Nodo *pilaPares = NULL;
+    Nodo *pilaImpares = NULL;
+    while (pila != NULL){
+        int verificador = pop(pila);
+        if (verificador % 2 == 0){
+            push(pilaPares,verificador);
+        }else{
+            push(pilaImpares, verificador);
+        }
+    }
+}
 
 /*
 CONSIGNA 10
@@ -107,6 +229,22 @@ Diseñar una función que reciba dos pilas (A y B) y determine si son
 exactamente iguales (mismo tamaño, mismos elementos en el mismo orden).
 */
 // Tu resolución acá
+void igualesPilas(Nodo *&pilaA, Nodo *&pilaB){
+    bool Igualdad = true;
+    while (pilaA != NULL && pilaB != NULL){
+        if (pop(pilaA) != pop(pilaB)) {
+            Igualdad = false;
+        }
+    }
+    if (pilaA == NULL && pilaB != NULL){
+        cout << "No tienen el mismo tamaño"<<endl;
+    }
+    if (pilaA != NULL && pilaB == NULL){
+        cout << "No tienen el mismo tamaño"<<endl;
+    }
+
+}
+
 
 
 
@@ -127,7 +265,18 @@ del resto de los elementos.
 */
 // Tu resolución acá
 
-
+void reemplazar(Nodo *&pila, int x){
+    Nodo *pilaAux = NULL;
+    while(pila != NULL){
+        int valor = pop(pila);
+        if (valor != x){
+            push(pilaAux,valor); 
+        }
+    }
+    while (pilaAux != NULL){
+        push(pila,pop(pilaAux));
+    }
+}
 
 /*
 CONSIGNA 13
@@ -136,7 +285,17 @@ en la posición de "fondo" de la pila (es decir, debe quedar debajo de
 todo).
 */
 // Tu resolución acá
+void elementoX(Nodo *&pila, int x){
+    Nodo *pilaAux = NULL;
+    while (pila != NULL){
+        push(pilaAux,pop(pila));
+    }
+    push(pila,x);
+     while (pilaAux != NULL){
+        push(pila,pop(pilaAux));
+    }
 
+}
 
 
 /*
@@ -146,6 +305,22 @@ en el fondo hacia el tope, desplazando los demás hacia abajo,
 manteniendo su orden relativo.
 */
 // Tu resolución acá
+void funcion(Nodo *&pila){ 
+    Nodo *pilaAux = NULL;
+    
+    while (pila != NULL){
+        int tope = pop(pila);
+        push(pilaAux,tope);
+    }
+    while (pilaAux != NULL){
+        int valor = pop(pilaAux);
+        if (tope != valor) {
+            push(pila,valor);
+        }
+    }
+    push(pila,tope);
+
+}
 
 
 
