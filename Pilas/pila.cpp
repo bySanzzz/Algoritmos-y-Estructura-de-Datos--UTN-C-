@@ -17,7 +17,7 @@ void push(Nodo<T> *&pila, T dato){
     nuevo->sgte = pila;
     pila = nuevo;
 }
-
+                                                                                                                
 /*
 Cuando yo quiera quitar un dato y retornarlo, necesto saber dos cosas: donde? de que tipo es el dato?
 */

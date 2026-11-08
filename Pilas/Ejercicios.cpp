@@ -11,9 +11,9 @@ Nodo *pila = NULL; // Creo pila
 
 void push(Nodo *&pila, int dato){
     Nodo *nuevo = new Nodo();   // 1) crear un nodo
-    nuevo->info = dato;         // 2) guardarle el dato
     nuevo->sgte = pila;         // 3) que apunte al que era el tope
-    pila = nuevo;               // 4) ahora el tope es el nuevo
+    pila = nuevo;                nuevo->info = dato;         // 2) guardarle el dato
+   // 4) ahora el tope es el nuevo
 }
 
 int pop(Nodo *&pila){
